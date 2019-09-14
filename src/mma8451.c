@@ -42,6 +42,8 @@
 #include "semphr.h"
 #include "task.h"
 
+
+// COMMENT
 /*==================[macros and definitions]=================================*/
 #define MMA8451_I2C_ADDRESS     (0x1d)
 
