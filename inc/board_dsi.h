@@ -64,7 +64,10 @@ typedef enum
 {
     BOARD_LED_MSG_OFF = 0,
     BOARD_LED_MSG_ON,
-    BOARD_LED_MSG_TOGGLE
+    BOARD_LED_MSG_TOGGLE,
+    BOARD_LED_MSG_BLINK,
+    BOARD_LED_MSG_HEARTBEAT,
+    BOARD_LED_MSG_PULSE_TRAIN
 }board_ledMsg_enum;
 
 typedef struct

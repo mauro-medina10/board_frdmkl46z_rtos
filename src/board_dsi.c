@@ -41,6 +41,8 @@
 #include "fsl_gpio.h"
 #include "fsl_clock.h"
 #include "pin_mux.h"
+#include "board.h"
+#include "fsl_debug_console.h"
 
 /*==================[macros and definitions]=================================*/
 
@@ -122,6 +124,17 @@ void board_init(void)
 	{
 		PORT_SetPinConfig(board_gpioSw[i].port, board_gpioSw[i].pin, &port_sw_config);
 		GPIO_PinInit(board_gpioSw[i].gpio, board_gpioSw[i].pin, &gpio_sw_config);
+	}
+	/* ============ consola debug ===========
+	 * -----------------------------------------
+	 * Solo se recomienda usar cuando se esta en
+	 * el main stack o cuando solo se necesita
+	 * mandar un mensaje, ya que, utiliza demasiado stack.
+	 * -----------------------------------------*/
+
+	if(DbgConsole_Init(BOARD_DEBUG_UART_BASEADDR,BOARD_DEBUG_UART_BAUDRATE,BOARD_DEBUG_UART_TYPE,BOARD_DEBUG_UART_CLK_FREQ))
+	{
+	    while(1);
 	}
 
 	/* =========== I2C =================== */
