@@ -72,6 +72,14 @@ typedef enum
 
 typedef struct
 {
+    board_ledId_enum idLed;
+    board_ledMsg_enum msgLed;
+    uint32_t semiPeriodo;
+    uint8_t trainLength;
+}board_ledConf_enum;
+
+typedef struct
+{
     PORT_Type *port;
     GPIO_Type *gpio;
     uint32_t pin;
@@ -91,7 +99,7 @@ void board_init(void);
 /** \brief setea estado del led indicado
  **
  **/
-void board_setLed(board_ledId_enum id, board_ledMsg_enum msg);
+void board_setLed(board_ledConf_enum conf);
 
 /** \brief Devuelve estado del pulsador indicado
  **
@@ -100,6 +108,12 @@ void board_setLed(board_ledId_enum id, board_ledMsg_enum msg);
  **/
 bool board_getSw(board_swId_enum id);
 
+/** \brief Maneja el comportamiento de los leds.
+ **
+ **/
+void board_periodicTask1msLed(void);
+
+void board_ledInit(void);
 /*==================[cplusplus]==============================================*/
 #ifdef __cplusplus
 }
