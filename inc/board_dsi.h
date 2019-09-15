@@ -99,7 +99,7 @@ void board_init(void);
 /** \brief setea estado del led indicado
  **
  **/
-void board_setLed(board_ledConf_enum conf);
+void board_setLed(board_ledConf_enum* conf);
 
 /** \brief Devuelve estado del pulsador indicado
  **

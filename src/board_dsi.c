@@ -121,6 +121,8 @@ void board_init(void)
 		GPIO_PinInit(board_gpioLeds[i].gpio, board_gpioLeds[i].pin, &gpio_led_config);
 	}
 
+	board_ledInit();
+
 	/* inicialización de SWs */
 	for (i = 0 ; i < BOARD_SW_ID_TOTAL ; i++)
 	{
@@ -156,35 +158,35 @@ void board_ledInit(void)
     }
 }
 
-void board_setLed(board_ledConf_enum conf)
+void board_setLed(board_ledConf_enum* conf)
 {
-    ledConf[conf.idLed] = conf;
-    switch (conf.msgLed)
+    ledConf[conf->idLed] = *conf;
+    switch (conf->msgLed)
     {
         case BOARD_LED_MSG_OFF:
-        	GPIO_PortSet(board_gpioLeds[conf.idLed].gpio, 1<<board_gpioLeds[conf.idLed].pin);
+        	GPIO_PortSet(board_gpioLeds[conf->idLed].gpio, 1<<board_gpioLeds[conf->idLed].pin);
             break;
 
         case BOARD_LED_MSG_ON:
-        	GPIO_PortClear(board_gpioLeds[conf.idLed].gpio, 1<<board_gpioLeds[conf.idLed].pin);
+        	GPIO_PortClear(board_gpioLeds[conf->idLed].gpio, 1<<board_gpioLeds[conf->idLed].pin);
             break;
 
         case BOARD_LED_MSG_TOGGLE:
-        	GPIO_PortToggle(board_gpioLeds[conf.idLed].gpio, 1<<board_gpioLeds[conf.idLed].pin);
+        	GPIO_PortToggle(board_gpioLeds[conf->idLed].gpio, 1<<board_gpioLeds[conf->idLed].pin);
             break;
 
         case BOARD_LED_MSG_BLINK:
-            countLed[conf.idLed] = conf.semiPeriodo;
+            countLed[conf->idLed] = conf->semiPeriodo;
             break;
 
         case BOARD_LED_MSG_HEARTBEAT:
-            countLed[conf.idLed] = conf.semiPeriodo;
-            ledConf[conf.idLed].trainLength = 2;
+            countLed[conf->idLed] = conf->semiPeriodo;
+            ledConf[conf->idLed].trainLength = 2;
             break;
 
         case BOARD_LED_MSG_PULSE_TRAIN:
-            ledConf[conf.idLed].semiPeriodo = conf.semiPeriodo / conf.trainLength;
-            countLed[conf.idLed] = ledConf[conf.idLed].semiPeriodo;
+            ledConf[conf->idLed].semiPeriodo = conf->semiPeriodo / conf->trainLength;
+            countLed[conf->idLed] = ledConf[conf->idLed].semiPeriodo;
             break;
 
         default:
