@@ -253,13 +253,13 @@ void board_periodicTask1msLed(void)
                 switch(semiPeriod[i])
                 {
                 case 1: //pulsos
-                    if(countLed[i] == 0)
+                    if(countLed[i] == 0 && n[i] < (ledConf[i].trainLength*2-1))
                     {
                         GPIO_PortToggle(board_gpioLeds[ledConf[i].idLed].gpio, 1<<board_gpioLeds[ledConf[i].idLed].pin);
-                        countLed[i] = ledConf[i].semiPeriodo / ledConf[i].trainLength;
+                        countLed[i] = ledConf[i].semiPeriodo / (ledConf[i].trainLength*2-1);
                         n[i]++;
                     }
-                    if(n[i] == (ledConf->trainLength*2-1))
+                    if(countLed[i] == 0 && n[i] == (ledConf[i].trainLength*2-1))
                     {
                         GPIO_PortSet(board_gpioLeds[ledConf[i].idLed].gpio, 1<<board_gpioLeds[ledConf[i].idLed].pin);
                         countLed[i] = ledConf[i].semiPeriodo;
