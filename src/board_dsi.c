@@ -135,7 +135,8 @@ void board_init(void)
 	 * -----------------------------------------
 	 * Solo se recomienda usar cuando se esta en
 	 * el main stack o cuando solo se necesita
-	 * mandar un mensaje, ya que, utiliza demasiado stack.
+	 * mandar un mensaje. Utiliza demasiado stack
+	 * y crashea.
 	 * -----------------------------------------*/
 
 	if(DbgConsole_Init(BOARD_DEBUG_UART_BASEADDR,BOARD_DEBUG_UART_BAUDRATE,BOARD_DEBUG_UART_TYPE,BOARD_DEBUG_UART_CLK_FREQ))
@@ -185,7 +186,7 @@ void board_setLed(board_ledConf_enum* conf)
 
         case BOARD_LED_MSG_HEARTBEAT:
             countLed[conf->idLed] = conf->semiPeriodo;
-            ledConf[conf->idLed].trainLength = 2;
+            semiPeriod[conf->idLed] = 2;
             break;
 
         case BOARD_LED_MSG_PULSE_TRAIN:
@@ -218,7 +219,7 @@ void board_periodicTask1msLed(void)
 
         case BOARD_LED_MSG_HEARTBEAT:
             countLed[i]--;
-            switch(ledConf[i].trainLength)
+            switch(semiPeriod[i])
             {
             case 1:
                 if(countLed[i] == (2*ledConf[i].semiPeriodo/3))
@@ -232,7 +233,7 @@ void board_periodicTask1msLed(void)
                 else if(countLed[i] == 0)
                 {
                     GPIO_PortToggle(board_gpioLeds[ledConf[i].idLed].gpio, 1<<board_gpioLeds[ledConf[i].idLed].pin); //aca apaga
-                    ledConf[i].trainLength = 2;
+                    semiPeriod[i] = 2;
                     countLed[i] = ledConf[i].semiPeriodo;
                 }
                 break;
@@ -240,7 +241,7 @@ void board_periodicTask1msLed(void)
                 if(countLed[i] == 0)
                 {
                     GPIO_PortToggle(board_gpioLeds[ledConf[i].idLed].gpio, 1<<board_gpioLeds[ledConf[i].idLed].pin); //aca prende
-                    ledConf[i].trainLength = 1;
+                    semiPeriod[i] = 1;
                     countLed[i] = ledConf[i].semiPeriodo;
                 }
                 break;
@@ -248,7 +249,7 @@ void board_periodicTask1msLed(void)
             }
             break;
 
-            case BOARD_LED_MSG_PULSE_TRAIN:     //no funciona bien
+            case BOARD_LED_MSG_PULSE_TRAIN:
                 countLed[i]--;
                 switch(semiPeriod[i])
                 {

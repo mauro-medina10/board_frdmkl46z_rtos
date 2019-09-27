@@ -96,6 +96,11 @@ typedef struct
  **/
 void board_init(void);
 
+/** \brief inicializaci�n de los led
+ **
+ **/
+void board_ledInit(void);
+
 /** \brief setea estado del led indicado
  **
  **/
@@ -113,7 +118,6 @@ bool board_getSw(board_swId_enum id);
  **/
 void board_periodicTask1msLed(void);
 
-void board_ledInit(void);
 /*==================[cplusplus]==============================================*/
 #ifdef __cplusplus
 }
