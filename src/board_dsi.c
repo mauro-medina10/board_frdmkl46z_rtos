@@ -34,14 +34,14 @@
 
 /*==================[inclusions]=============================================*/
 #include <board_dsi.h>
-#include <i2c.h>
-#include <mma8451.h>
 
 #include "fsl_port.h"
 #include "fsl_gpio.h"
 #include "fsl_clock.h"
 #include "pin_mux.h"
 #include "board.h"
+#include "i2c.h"
+#include "mma8451.h"
 #include "fsl_debug_console.h"
 
 /*==================[macros and definitions]=================================*/
