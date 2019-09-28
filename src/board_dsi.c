@@ -62,10 +62,6 @@ static const board_gpioInfo_type board_gpioSw[] =
     {PORTC, GPIOC, 12},     /* SW3 */
 };
 
-static uint32_t countLed[BOARD_LED_ID_TOTAL];
-static board_ledConf_enum ledConf[BOARD_LED_ID_TOTAL];
-uint8_t n[BOARD_LED_ID_TOTAL];
-uint8_t semiPeriod[BOARD_LED_ID_TOTAL];
 /*==================[internal functions declaration]=========================*/
 
 /*==================[internal data definition]===============================*/
@@ -126,7 +122,7 @@ void board_init(void)
 		GPIO_PinInit(board_gpioLeds[i].gpio, board_gpioLeds[i].pin, &gpio_led_config);
 	}
 
-	board_ledInit();
+	led_Init();
 
 	/* inicialización de SWs */
 	for (i = 0 ; i < BOARD_SW_ID_TOTAL ; i++)
@@ -153,17 +149,6 @@ void board_init(void)
 
 	/* =========== MMA8451 ================ */
 	mma8451_init();
-}
-void board_ledInit(void)
-{
-    uint8_t i;
-    for(i = 0; i < BOARD_LED_ID_TOTAL ; i++)
-    {
-        ledConf[i].msgLed = BOARD_LED_MSG_OFF;
-        countLed[i] = 0;
-        semiPeriod[i] = 1;
-        n[i] = 0;
-    }
 }
 
 bool board_getSw(board_swId_enum id)

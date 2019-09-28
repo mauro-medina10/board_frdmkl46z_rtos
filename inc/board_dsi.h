@@ -60,13 +60,6 @@ typedef enum
     BOARD_SW_ID_TOTAL
 }board_swId_enum;
 
-typedef struct
-{
-    board_ledId_enum idLed;
-    board_ledMsg_enum msgLed;
-    uint32_t semiPeriodo;
-    uint8_t trainLength;
-}board_ledConf_enum;
 
 typedef struct
 {
