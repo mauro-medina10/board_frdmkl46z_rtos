@@ -254,10 +254,7 @@ static void taskAcc(void *pvParameters)
 	        }
 	    }
 
-	    PORT_ClearPinsInterruptFlags(INT1_PORT, 1<<INT1_PIN);
-
-	    NVIC_ClearPendingIRQ(PORTC_PORTD_IRQn);
-	    NVIC_EnableIRQ(PORTC_PORTD_IRQn);
+	    PORT_SetPinInterruptConfig(INT1_PORT, INT1_PIN, kPORT_InterruptLogicZero);
 	}
 }
 
@@ -351,7 +348,9 @@ void PORTC_PORTD_IRQHandler(void)
 
     portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 
-    NVIC_DisableIRQ(PORTC_PORTD_IRQn);
+    PORT_SetPinInterruptConfig(INT1_PORT, INT1_PIN, kPORT_InterruptOrDMADisabled);
+
+    PORT_ClearPinsInterruptFlags(INT1_PORT, 1<<INT1_PIN);
 }
 
 /*==================[end of file]============================================*/
