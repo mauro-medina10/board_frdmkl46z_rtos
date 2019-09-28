@@ -141,6 +141,8 @@ typedef union
 
 static int16_t readX, readY, readZ;
 
+SemaphoreHandle_t  xMutexAcc;
+
 /*==================[internal functions declaration]=========================*/
 static uint8_t mma8451_read_reg(uint8_t addr)
 {
@@ -224,7 +226,9 @@ static void taskAcc(void *pvParameters)
 
 	while (1)
 	{
-		xSemaphoreTake(xSemINTAcc, portMAX_DELAY);
+	    xSemaphoreTake(xSemINTAcc, portMAX_DELAY);
+
+	    xSemaphoreTake(xMutexAcc , portMAX_DELAY);
 
 	    intSource.data = mma8451_read_reg(INT_SOURCE_ADDRESS);
 
@@ -254,6 +258,8 @@ static void taskAcc(void *pvParameters)
 	        }
 	    }
 
+	    xSemaphoreGive(xMutexAcc);
+
 	    PORT_SetPinInterruptConfig(INT1_PORT, INT1_PIN, kPORT_InterruptLogicZero);
 	}
 }
@@ -272,6 +278,10 @@ void mma8451_init(void)
 	ctrl_reg4.INT_EN_TRANS = 0;
 	ctrl_reg4.INT_EN_FIFO = 0;
 	ctrl_reg4.INT_EN_ASLP = 0;
+
+    xMutexAcc = xSemaphoreCreateMutex();
+
+    xSemaphoreTake(xMutexAcc , 0);
 
 	mma8451_write_reg(CTRL_REG4_ADDRESS, ctrl_reg4.data);
 
@@ -302,6 +312,8 @@ void mma8451_init(void)
     /* verificación */
     ctrl_reg1.data = mma8451_read_reg(CTRL_REG1_ADDRESS);
 
+    xSemaphoreGive(xMutexAcc);
+
     xSemINTAcc = xSemaphoreCreateBinary();
 
     xSemaphoreTake(xSemINTAcc, 0);
@@ -317,6 +329,8 @@ void mma8451_setDataRate(DR_enum rate)
     bool estAct;
 
     /* antes de modificar data rate es necesario poner ACTIVE = 0 */
+    xSemaphoreTake(xMutexAcc , portMAX_DELAY);
+
     ctr_reg1.data = mma8451_read_reg(CTRL_REG1_ADDRESS);
 
     /* guarda valor que tiene ACTIVE y luego pone a cero */
@@ -333,6 +347,8 @@ void mma8451_setDataRate(DR_enum rate)
 
 	/* verificación */
 	ctr_reg1.data = mma8451_read_reg(0x2a);
+
+	xSemaphoreGive(xMutexAcc);
 }
 
 int16_t mma8451_getAcX(void)
@@ -342,7 +358,7 @@ int16_t mma8451_getAcX(void)
 
 void PORTC_PORTD_IRQHandler(void)
 {
-	BaseType_t xHigherPriorityTaskWoken;
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
     xSemaphoreGiveFromISR( xSemINTAcc, &xHigherPriorityTaskWoken );
 
