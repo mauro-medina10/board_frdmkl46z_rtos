@@ -72,6 +72,12 @@ void uart_rtos_init(void)
 	qSend = xQueueCreate(16, sizeof(uint8_t));
 	qRecv = xQueueCreate(16, sizeof(uint8_t));
 
+#ifdef DEBUG
+    vQueueAddToRegistry( qSend, "uartTxQ" );
+    vQueueAddToRegistry( qRecv, "uartRxQ" );
+#endif
+
+
 	CLOCK_SetLpsci0Clock(0x1U);
 
 	/* PORTA1 (pin 35) is configured as UART0_RX */
@@ -120,8 +126,8 @@ int32_t uart_rtos_recDatos(uint8_t *pBuf, int32_t size, uint32_t blockTime)
 
     /* ATENCIÓN CORREGIR ERROR */
 
-    while (xQueueReceive( qRecv, &pBuf[ret], waitTick) == pdTRUE &&
-    		ret < size)
+    while ((ret < size) &&
+           (xQueueReceive( qRecv, &pBuf[ret], waitTick) == pdTRUE) )
     {
     	ret++;
     	waitTick = 0;
@@ -153,7 +159,6 @@ int32_t uart_rtos_envDatos(uint8_t *pBuf, int32_t size, uint32_t blockTime)
     		txHasEnded = false;
     		LPSCI_EnableInterrupts(UART0, kLPSCI_TxDataRegEmptyInterruptEnable);
     	}
-    	waitTick = 0;
     	ret++;
     }
 
