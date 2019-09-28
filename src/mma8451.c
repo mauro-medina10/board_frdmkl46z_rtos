@@ -356,6 +356,16 @@ int16_t mma8451_getAcX(void)
 	return (int16_t)(((int32_t)readX * 100) / (int32_t)4096);
 }
 
+int16_t mma8451_getAcY(void)
+{
+    return (int16_t)(((int32_t)readY * 100) / (int32_t)4096);
+}
+
+int16_t mma8451_getAcZ(void)
+{
+    return (int16_t)(((int32_t)readZ * 100) / (int32_t)4096);
+}
+
 void PORTC_PORTD_IRQHandler(void)
 {
 	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
