@@ -132,6 +132,7 @@ void adc_init(int32_t sampleTime)
 
     xADCQueue = xQueueCreate( 10, sizeof( int32_t ) );
 
+    //timer virtual
     xTimer = xTimerCreate("trigerADC",
     		sampleTime / portTICK_PERIOD_MS,
 			pdTRUE,

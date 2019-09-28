@@ -60,16 +60,6 @@ typedef enum
     BOARD_SW_ID_TOTAL
 }board_swId_enum;
 
-typedef enum
-{
-    BOARD_LED_MSG_OFF = 0,
-    BOARD_LED_MSG_ON,
-    BOARD_LED_MSG_TOGGLE,
-    BOARD_LED_MSG_BLINK,
-    BOARD_LED_MSG_HEARTBEAT,
-    BOARD_LED_MSG_PULSE_TRAIN
-}board_ledMsg_enum;
-
 typedef struct
 {
     board_ledId_enum idLed;
@@ -95,16 +85,6 @@ typedef struct
  **
  **/
 void board_init(void);
-
-/** \brief inicializaci�n de los led
- **
- **/
-void board_ledInit(void);
-
-/** \brief setea estado del led indicado
- **
- **/
-void board_setLed(board_ledConf_enum* conf);
 
 /** \brief Devuelve estado del pulsador indicado
  **
