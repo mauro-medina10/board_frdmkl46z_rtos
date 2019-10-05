@@ -57,7 +57,7 @@ static const board_gpioInfo_type board_gpioLeds[] =
 };
 
 static uint32_t countLed[BOARD_LED_ID_TOTAL];
-static board_ledConf_enum ledConf[BOARD_LED_ID_TOTAL];
+static led_conf_enum ledConf[BOARD_LED_ID_TOTAL];
 
 uint8_t n[BOARD_LED_ID_TOTAL];
 uint8_t semiPeriod[BOARD_LED_ID_TOTAL];
@@ -75,40 +75,40 @@ void led_Init(void)
     uint8_t i;
     for(i = 0; i < BOARD_LED_ID_TOTAL ; i++)
     {
-        ledConf[i].msgLed = BOARD_LED_MSG_OFF;
+        ledConf[i].msgLed = LED_MSG_OFF;
         countLed[i] = 0;
         semiPeriod[i] = 1;
         n[i] = 0;
     }
 }
 
-void led_setConf(board_ledConf_enum* conf)
+void led_setConf(led_conf_enum* conf)
 {
     ledConf[conf->idLed] = *conf;
     switch (conf->msgLed)
     {
-    case BOARD_LED_MSG_OFF:
+    case LED_MSG_OFF:
         GPIO_PortSet(board_gpioLeds[conf->idLed].gpio, 1<<board_gpioLeds[conf->idLed].pin);
         break;
 
-    case BOARD_LED_MSG_ON:
+    case LED_MSG_ON:
         GPIO_PortClear(board_gpioLeds[conf->idLed].gpio, 1<<board_gpioLeds[conf->idLed].pin);
         break;
 
-    case BOARD_LED_MSG_TOGGLE:
+    case LED_MSG_TOGGLE:
         GPIO_PortToggle(board_gpioLeds[conf->idLed].gpio, 1<<board_gpioLeds[conf->idLed].pin);
         break;
 
-    case BOARD_LED_MSG_BLINK:
+    case LED_MSG_BLINK:
         countLed[conf->idLed] = conf->semiPeriodo;
         break;
 
-    case BOARD_LED_MSG_HEARTBEAT:
+    case LED_MSG_HEARTBEAT:
         countLed[conf->idLed] = conf->semiPeriodo;
         semiPeriod[conf->idLed] = 2;
         break;
 
-    case BOARD_LED_MSG_PULSE_TRAIN:
+    case LED_MSG_PULSE_TRAIN:
         countLed[conf->idLed] = conf->semiPeriodo;
         semiPeriod[conf->idLed] = 1;
         n[conf->idLed] = 0;
@@ -127,7 +127,7 @@ void led_periodicTask1ms(void)
     {
         switch(ledConf[i].msgLed)
         {
-        case BOARD_LED_MSG_BLINK:
+        case LED_MSG_BLINK:
             countLed[i]--;
             if(countLed[i] == 0)
             {
@@ -136,7 +136,7 @@ void led_periodicTask1ms(void)
             }
             break;
 
-        case BOARD_LED_MSG_HEARTBEAT:
+        case LED_MSG_HEARTBEAT:
             countLed[i]--;
             switch(semiPeriod[i])
             {
@@ -168,7 +168,7 @@ void led_periodicTask1ms(void)
             }
             break;
 
-            case BOARD_LED_MSG_PULSE_TRAIN:
+            case LED_MSG_PULSE_TRAIN:
                 countLed[i]--;
                 switch(semiPeriod[i])
                 {

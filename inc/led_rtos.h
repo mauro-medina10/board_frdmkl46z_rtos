@@ -49,21 +49,21 @@ extern "C" {
 
 typedef enum
 {
-    BOARD_LED_MSG_OFF = 0,
-    BOARD_LED_MSG_ON,
-    BOARD_LED_MSG_TOGGLE,
-    BOARD_LED_MSG_BLINK,
-    BOARD_LED_MSG_HEARTBEAT,
-    BOARD_LED_MSG_PULSE_TRAIN
-}board_ledMsg_enum;
+    LED_MSG_OFF = 0,
+    LED_MSG_ON,
+    LED_MSG_TOGGLE,
+    LED_MSG_BLINK,
+    LED_MSG_HEARTBEAT,
+    LED_MSG_PULSE_TRAIN
+}led_msg_enum;
 
 typedef struct
 {
     board_ledId_enum idLed;
-    board_ledMsg_enum msgLed;
+    led_msg_enum msgLed;
     uint32_t semiPeriodo;
     uint8_t trainLength;
-}board_ledConf_enum;
+}led_conf_enum;
 
 /*==================[typedef]================================================*/
 
@@ -79,7 +79,7 @@ void led_Init(void);
 /** \brief setea estado del led indicado
  **
  **/
-void led_setConf(board_ledConf_enum* conf);
+void led_setConf(led_conf_enum* conf);
 
 /** \brief funcion que se debe llamar
  ** periodicamente para el manejo de
