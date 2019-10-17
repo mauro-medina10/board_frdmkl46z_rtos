@@ -44,7 +44,11 @@
 #include "fsl_debug_console.h"
 #include "fsl_adc16.h"
 #include "fsl_port.h"
+
+
+//FreeRTOS includes
 #include "FreeRTOS.h"
+#include "semphr.h"
 #include "queue.h"
 #include "task.h"
 #include "timers.h"
@@ -130,7 +134,7 @@ void adc_init(int32_t sampleTime)
 {
 	TimerHandle_t xTimer;
 
-    xADCQueue = xQueueCreate( 10, sizeof( int32_t ) );
+    xADCQueue = xQueueCreate( 20, sizeof( int32_t ) );
 
 
 #ifdef DEBUG
@@ -173,6 +177,22 @@ bool adc_getValueBlocking(int32_t *lect, int32_t timeToWait)
 		return true;
 	else
 		return false;
+}
+
+int32_t adc_getProm_nonbloq(int32_t samp)
+{
+    int32_t aux = 0, prom = 0;
+    int32_t acum = 0;
+
+    if(samp == 0)return 0;
+
+    for(int i = 0; i < samp; i++)
+    {
+        xQueueReceive(xADCQueue, &aux, portMAX_DELAY );
+        acum += aux;
+    }
+    prom = acum / samp;
+    return prom;
 }
 
 void ADC0_IRQHandler(void)
