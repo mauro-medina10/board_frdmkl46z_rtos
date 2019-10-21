@@ -36,6 +36,7 @@
 #include <board_dsi.h>
 #include <i2c.h>
 #include <led_rtos.h>
+#include <uart_rtos.h>
 #include <mma8451.h>
 
 #include "fsl_port.h"
@@ -142,6 +143,9 @@ void board_init(void)
 	{
 	    while(1);
 	}
+
+    /* =========== UART0 =================== */
+    uart_rtos_init();
 
 	/* =========== I2C =================== */
 

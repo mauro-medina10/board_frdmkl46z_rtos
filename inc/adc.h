@@ -55,6 +55,8 @@ void adc_init(int32_t sampleTime);
 int32_t adc_getVal(void);
 bool adc_getValueBlocking(int32_t *lect, int32_t timeToWait);
 
+int32_t adc_getProm_nonbloq(int32_t samp);
+
 /*==================[cplusplus]==============================================*/
 #ifdef __cplusplus
 }
@@ -62,3 +64,4 @@ bool adc_getValueBlocking(int32_t *lect, int32_t timeToWait);
 
 /*==================[end of file]============================================*/
 #endif /* ADC_H_ */
+
