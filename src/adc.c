@@ -195,22 +195,6 @@ int32_t adc_getProm_nonbloq(int32_t samp)
     return prom;
 }
 
-int32_t adc_getProm_nonbloq(int32_t samp)
-{
-    int32_t aux = 0, prom = 0;
-    int32_t acum = 0;
-
-    if(samp == 0)return 0;
-
-    for(int i = 0; i < samp; i++)
-    {
-        xQueueReceive(xADCQueue, &aux, portMAX_DELAY );
-        acum += aux;
-    }
-    prom = acum / samp;
-    return prom;
-}
-
 void ADC0_IRQHandler(void)
 {
     int32_t adcLect;
