@@ -69,6 +69,7 @@ typedef struct
 
 /*==================[external data declaration]==============================*/
 
+
 /*==================[external functions definition]==========================*/
 
 /** \brief inicializaci�n de los led
