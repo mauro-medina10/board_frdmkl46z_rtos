@@ -81,6 +81,8 @@ int16_t mma8451_getAcY(void);
 
 int16_t mma8451_getAcZ(void);
 
+void mma8451_getAll(int16_t* X, int16_t* Y, int16_t* Z);
+
 void mma8451_setDataRate(DR_enum rate);
 
 

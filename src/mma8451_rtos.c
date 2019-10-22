@@ -390,6 +390,15 @@ int16_t mma8451_getAcZ(void)
     return (int16_t)(((int32_t)readZ * 100) / (int32_t)4096);
 }
 
+void mma8451_getAll(int16_t* X, int16_t* Y, int16_t* Z)
+{
+    xSemaphoreTake(xSemaphoreValnew, portMAX_DELAY);
+    *X = (int16_t)(((int32_t)readX * 100) / (int32_t)4096);
+    *Y = (int16_t)(((int32_t)readY * 100) / (int32_t)4096);
+    *Z = (int16_t)(((int32_t)readZ * 100) / (int32_t)4096);
+}
+
+
 void PORTC_PORTD_IRQHandler(void)
 {
 	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
