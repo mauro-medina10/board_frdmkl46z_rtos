@@ -37,6 +37,7 @@
 /*==================[inclusions]=============================================*/
 #include "MKL46Z4.h"
 #include "stdbool.h"
+#include "fsl_i2c_freertos.h"
 
 /*==================[cplusplus]==============================================*/
 #ifdef __cplusplus
@@ -51,6 +52,8 @@ extern "C" {
 
 /*==================[external functions definition]==========================*/
 void i2c_init(void);
+
+void i2c_rtos_init(i2c_rtos_handle_t *handle,i2c_master_config_t *masterConfig);
 
 /*==================[cplusplus]==============================================*/
 #ifdef __cplusplus

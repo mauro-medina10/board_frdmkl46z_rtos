@@ -275,15 +275,8 @@ static void taskAcc(void *pvParameters)
 /*==================[external functions definition]==========================*/
 void mma8451_init(void)
 {
-    uint32_t sourceClock;
-
     /* =========== I2C rtos =================== */
-    sourceClock = CLOCK_GetFreq(I2C0_CLK_SRC);
-    I2C_MasterGetDefaultConfig(&I2Cconfig);
-
-    i2c_init();
-
-    if(I2C_RTOS_Init(&I2Chandle, I2C0,&I2Cconfig,sourceClock) != kStatus_Success) for(;;);
+    i2c_rtos_init(&I2Chandle,&I2Cconfig);
     /* ====================================== */
 
     CTRL_REG1_t ctrl_reg1;

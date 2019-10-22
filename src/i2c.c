@@ -39,6 +39,8 @@
 #include "fsl_clock.h"
 #include "pin_mux.h"
 
+#include "fsl_i2c_freertos.h"
+
 /*==================[macros and definitions]=================================*/
 #define I2C_RELEASE_SDA_PORT PORTE
 #define I2C_RELEASE_SCL_PORT PORTE
@@ -160,8 +162,8 @@ static void i2c_configPins(void)
 
 void i2c_init(void)
 {
-//	i2c_master_config_t masterConfig;
-//	uint32_t sourceClock;
+	i2c_master_config_t masterConfig;
+	uint32_t sourceClock;
 
 	i2c_releaseBus();
 
@@ -173,13 +175,29 @@ void i2c_init(void)
 	 * masterConfig.glitchFilterWidth = 0U;
 	 * masterConfig.enableMaster = true;
 	 */
-//	I2C_MasterGetDefaultConfig(&masterConfig);
-//
-//	masterConfig.baudRate_Bps = I2C_BAUDRATE;
-//
-//	sourceClock = CLOCK_GetFreq(I2C0_CLK_SRC);
-//
-//	I2C_MasterInit(I2C0, &masterConfig, sourceClock);
+	I2C_MasterGetDefaultConfig(&masterConfig);
+
+	masterConfig.baudRate_Bps = I2C_BAUDRATE;
+
+	sourceClock = CLOCK_GetFreq(I2C0_CLK_SRC);
+
+	I2C_MasterInit(I2C0, &masterConfig, sourceClock);
+}
+
+void i2c_rtos_init(i2c_rtos_handle_t *handle,i2c_master_config_t *masterConfig)
+{
+    uint32_t sourceClock;
+
+    i2c_releaseBus();
+
+    i2c_configPins();
+
+    sourceClock = CLOCK_GetFreq(I2C0_CLK_SRC);
+    I2C_MasterGetDefaultConfig(masterConfig);
+
+    i2c_init();
+
+    if(I2C_RTOS_Init(handle, I2C0,masterConfig,sourceClock) != kStatus_Success) for(;;);
 }
 
 /*==================[end of file]============================================*/
