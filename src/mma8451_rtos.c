@@ -144,6 +144,7 @@ typedef union
 static int16_t readX, readY, readZ;
 
 SemaphoreHandle_t  xMutexAcc;
+SemaphoreHandle_t  xSemaphoreValnew;
 
 i2c_rtos_handle_t I2Chandle;
 i2c_master_config_t I2Cconfig;
@@ -262,6 +263,7 @@ static void taskAcc(void *pvParameters)
 	            readG  |= mma8451_read_reg(0x06);
 	            readZ = readG >> 2;
 	        }
+	        xSemaphoreGive(xSemaphoreValnew);
 	    }
 
 	    xSemaphoreGive(xMutexAcc);
@@ -332,8 +334,10 @@ void mma8451_init(void)
     xSemaphoreGive(xMutexAcc);
 
     xSemINTAcc = xSemaphoreCreateBinary();
-
     xSemaphoreTake(xSemINTAcc, 0);
+
+    xSemaphoreValnew = xSemaphoreCreateBinary();
+    xSemaphoreTake(xSemaphoreValnew, 0);
 
     config_port_int1();
 
@@ -370,16 +374,19 @@ void mma8451_setDataRate(DR_enum rate)
 
 int16_t mma8451_getAcX(void)
 {
-	return (int16_t)(((int32_t)readX * 100) / (int32_t)4096);
+    xSemaphoreTake(xSemaphoreValnew, portMAX_DELAY);
+    return (int16_t)(((int32_t)readX * 100) / (int32_t)4096);
 }
 
 int16_t mma8451_getAcY(void)
 {
+    xSemaphoreTake(xSemaphoreValnew, portMAX_DELAY);
     return (int16_t)(((int32_t)readY * 100) / (int32_t)4096);
 }
 
 int16_t mma8451_getAcZ(void)
 {
+    xSemaphoreTake(xSemaphoreValnew, portMAX_DELAY);
     return (int16_t)(((int32_t)readZ * 100) / (int32_t)4096);
 }
 
