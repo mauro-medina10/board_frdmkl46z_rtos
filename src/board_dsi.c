@@ -34,10 +34,9 @@
 
 /*==================[inclusions]=============================================*/
 #include <board_dsi.h>
-#include <i2c.h>
 #include <led_rtos.h>
 #include <uart_rtos.h>
-#include <mma8451.h>
+#include <mma8451_rtos.h>
 
 #include "fsl_port.h"
 #include "fsl_gpio.h"
@@ -45,7 +44,6 @@
 #include "pin_mux.h"
 #include "board.h"
 #include "i2c.h"
-#include "mma8451.h"
 #include "fsl_debug_console.h"
 
 /*==================[macros and definitions]=================================*/
@@ -149,10 +147,10 @@ void board_init(void)
 
 	/* =========== I2C =================== */
 
-	i2c_init();
+	//i2c_init();
 
 	/* =========== MMA8451 ================ */
-	mma8451_init();
+	//mma8451_init();
 }
 
 bool board_getSw(board_swId_enum id)

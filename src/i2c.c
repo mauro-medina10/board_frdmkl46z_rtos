@@ -160,8 +160,8 @@ static void i2c_configPins(void)
 
 void i2c_init(void)
 {
-	i2c_master_config_t masterConfig;
-	uint32_t sourceClock;
+//	i2c_master_config_t masterConfig;
+//	uint32_t sourceClock;
 
 	i2c_releaseBus();
 
@@ -173,13 +173,13 @@ void i2c_init(void)
 	 * masterConfig.glitchFilterWidth = 0U;
 	 * masterConfig.enableMaster = true;
 	 */
-	I2C_MasterGetDefaultConfig(&masterConfig);
-
-	masterConfig.baudRate_Bps = I2C_BAUDRATE;
-
-	sourceClock = CLOCK_GetFreq(I2C0_CLK_SRC);
-
-	I2C_MasterInit(I2C0, &masterConfig, sourceClock);
+//	I2C_MasterGetDefaultConfig(&masterConfig);
+//
+//	masterConfig.baudRate_Bps = I2C_BAUDRATE;
+//
+//	sourceClock = CLOCK_GetFreq(I2C0_CLK_SRC);
+//
+//	I2C_MasterInit(I2C0, &masterConfig, sourceClock);
 }
 
 /*==================[end of file]============================================*/
