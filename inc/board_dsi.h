@@ -32,12 +32,28 @@
  *
  */
 
-#ifndef SD2_BOARD_H_
-#define SD2_BOARD_H_
+#ifndef BOARD_DSI_H_
+#define BOARD_DSI_H_
 
 /*==================[inclusions]=============================================*/
 #include "MKL46Z4.h"
 #include "stdbool.h"
+#include "stdio.h"
+#include "fsl_port.h"
+#include "fsl_gpio.h"
+#include "fsl_clock.h"
+#include "pin_mux.h"
+#include "board.h"
+#include "fsl_debug_console.h"
+#include "fsl_tpm.h"
+
+/* Perifericos */
+#include <uart_rtos.h>
+#include <mma8451_rtos.h>
+#include "i2c.h"
+#include "pwm.h"
+#include "adc.h"
+
 
 /*==================[cplusplus]==============================================*/
 #ifdef __cplusplus
@@ -45,6 +61,11 @@ extern "C" {
 #endif
 
 /*==================[macros]=================================================*/
+#define SENSOR_LUZ_PORT             PORTE
+#define SENSOR_LUZ_PIN              22
+
+#define ADC_FILTRO_PORT             PORTE
+#define ADC_FILTRO_PIN              18
 
 typedef enum
 {

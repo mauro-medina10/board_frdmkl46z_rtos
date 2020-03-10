@@ -57,9 +57,6 @@
 #define DEMO_ADC16_CHANNEL_GROUP    0U
 #define DEMO_ADC16_USER_CHANNEL     3U /* PTE22*/
 
-#define SENSOR_LUZ_PORT             PORTE
-#define SENSOR_LUZ_PIN              22
-
 /*==================[internal data declaration]==============================*/
 static adc16_channel_config_t adc16_channel;
 static volatile uint32_t g_Adc16ConversionValue;
@@ -77,11 +74,9 @@ static QueueHandle_t xADCQueue;
 
 /*==================[internal functions definition]==========================*/
 
-void ADC_config(void)
+void ADC_config(uint32_t channelNumber)
 {
     adc16_config_t adc16_config;
-
-    PORT_SetPinMux(SENSOR_LUZ_PORT, SENSOR_LUZ_PIN, kPORT_PinDisabledOrAnalog);
 
     /*
      * adc16ConfigStruct.referenceVoltageSource = kADC16_ReferenceVoltageSourceVref;
@@ -96,10 +91,14 @@ void ADC_config(void)
      */
 
     ADC16_GetDefaultConfig(&adc16_config);
+    adc16_config.enableHighSpeed = true;
+    adc16_config.enableContinuousConversion = true;
+
     ADC16_Init(ADC0, &adc16_config);
     ADC16_EnableHardwareTrigger(ADC0, false); /* Make sure the software trigger is used. */
 
-    adc16_channel.channelNumber = DEMO_ADC16_USER_CHANNEL;
+
+    adc16_channel.channelNumber = channelNumber;
     adc16_channel.enableInterruptOnConversionCompleted = true; /* Enable the interrupt. */
     adc16_channel.enableDifferentialConversion = false;
 
@@ -130,7 +129,7 @@ void vCallbackFunction( TimerHandle_t xTimer )
 
 /*==================[external functions definition]==========================*/
 
-void adc_init(int32_t sampleTime)
+void adc_init(int32_t sampleTime, uint32_t channelNumber)
 {
     TimerHandle_t xTimer;
 
@@ -142,16 +141,18 @@ void adc_init(int32_t sampleTime)
 #endif
 
 
-    xTimer = xTimerCreate("trigerADC",
-            sampleTime / portTICK_PERIOD_MS,
-            pdTRUE,
-            NULL,
-            vCallbackFunction);
-
     // Se inicializa el ADC
-    ADC_config();
+    ADC_config(channelNumber);
 
-    xTimerStart(xTimer, portMAX_DELAY);
+    if(sampleTime > 0){
+        xTimer = xTimerCreate("trigerADC",
+                sampleTime / portTICK_PERIOD_MS,
+                pdTRUE,
+                NULL,
+                vCallbackFunction);
+
+        xTimerStart(xTimer, portMAX_DELAY);
+    }
 }
 
 int32_t adc_getVal(void)

@@ -1,6 +1,6 @@
-/* Copyright 2019, DSI FCEIA UNR - Sistemas Digitales 2
+/* Copyright 2018, DSI FCEIA UNR - Sistemas Digitales 2
  *    DSI: http://www.dsi.fceia.unr.edu.ar/
- * Copyright 2019, Gustavo Muro
+ * Copyright 2018, Gustavo Muro
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,10 +31,11 @@
  *
  */
 
-#ifndef LED_RTOS_H_
-#define LED_RTOS_H_
+#ifndef PWM_H_
+#define PWM_H_
+
 /*==================[inclusions]=============================================*/
-#include "board_dsi.h"
+#include <board_dsi.h>
 
 /*==================[cplusplus]==============================================*/
 #ifdef __cplusplus
@@ -43,51 +44,20 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
-typedef enum
-{
-    LED_MSG_OFF = 0,
-    LED_MSG_ON,
-    LED_MSG_TOGGLE,
-    LED_MSG_BLINK,
-    LED_MSG_HEARTBEAT,
-    LED_MSG_PULSE_TRAIN
-}led_msg_enum;
-
-typedef struct
-{
-    board_ledId_enum idLed;
-    led_msg_enum msgLed;
-    uint32_t semiPeriodo;
-    uint8_t trainLength;
-}led_conf_enum;
-
 /*==================[typedef]================================================*/
 
 /*==================[external data declaration]==============================*/
 
-
 /*==================[external functions definition]==========================*/
+void pwm_init(void);
 
-/** \brief inicializaci�n de los led
- **
- **/
-void led_Init(void);
+void pwm_rtos_init();
 
-/** \brief setea estado del led indicado
- **
- **/
-void led_setConf(led_conf_enum* conf);
-
-/** \brief funcion que se debe llamar
- ** periodicamente para el manejo de
- ** los leds.
- **/
-void led_periodicTask1ms(void);
-
+void pwm_updateDutycycle(uint8_t dutyCyclePercent);
 /*==================[cplusplus]==============================================*/
 #ifdef __cplusplus
 }
 #endif
 
 /*==================[end of file]============================================*/
-#endif /* LED_RTOS_H_ */
+#endif /* SD2_I2C_H_ */

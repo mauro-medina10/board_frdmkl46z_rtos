@@ -51,11 +51,13 @@ extern "C" {
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions definition]==========================*/
-void adc_init(int32_t sampleTime);
+void ADC_config(uint32_t channelNumber);
+void adc_init(int32_t sampleTime, uint32_t channelNumber);
 int32_t adc_getVal(void);
 bool adc_getValueBlocking(int32_t *lect, int32_t timeToWait);
 
 int32_t adc_getProm_nonbloq(int32_t samp);
+void ADC_IniciarConv(void);
 
 /*==================[cplusplus]==============================================*/
 #ifdef __cplusplus

@@ -1,6 +1,6 @@
-/* Copyright 2019, DSI FCEIA UNR - Sistemas Digitales 2
+/* Copyright 2018, DSI FCEIA UNR - Sistemas Digitales 2
  *    DSI: http://www.dsi.fceia.unr.edu.ar/
- * Copyright 2019, Gustavo Muro
+ * Copyright 2018, Gustavo Muro
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,63 +31,69 @@
  *
  */
 
-#ifndef LED_RTOS_H_
-#define LED_RTOS_H_
 /*==================[inclusions]=============================================*/
-#include "board_dsi.h"
 
-/*==================[cplusplus]==============================================*/
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "pwm.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
-/*==================[macros]=================================================*/
+/*==================[macros and definitions]=================================*/
+#define PWM_FREQ 43000U
 
-typedef enum
-{
-    LED_MSG_OFF = 0,
-    LED_MSG_ON,
-    LED_MSG_TOGGLE,
-    LED_MSG_BLINK,
-    LED_MSG_HEARTBEAT,
-    LED_MSG_PULSE_TRAIN
-}led_msg_enum;
+/*==================[internal data declaration]==============================*/
 
-typedef struct
-{
-    board_ledId_enum idLed;
-    led_msg_enum msgLed;
-    uint32_t semiPeriodo;
-    uint8_t trainLength;
-}led_conf_enum;
+/*==================[internal functions declaration]=========================*/
 
-/*==================[typedef]================================================*/
+/*==================[internal data definition]===============================*/
 
-/*==================[external data declaration]==============================*/
+/*==================[external data definition]===============================*/
+
+/*==================[internal functions definition]==========================*/
 
 
 /*==================[external functions definition]==========================*/
 
-/** \brief inicializaci�n de los led
- **
- **/
-void led_Init(void);
+void pwm_init(void)
+{
+    uint32_t sourceClock;
 
-/** \brief setea estado del led indicado
- **
- **/
-void led_setConf(led_conf_enum* conf);
+    const tpm_config_t TPM_0_config = {
+      .prescale = kTPM_Prescale_Divide_1,
+      .useGlobalTimeBase = false,
+      .triggerSelect = kTPM_Trigger_Select_0,
+      .enableDoze = false,
+      .enableDebugMode = true,
+      .enableReloadOnTrigger = false,
+      .enableStopOnOverflow = false,
+      .enableStartOnTrigger = false,
+    };
 
-/** \brief funcion que se debe llamar
- ** periodicamente para el manejo de
- ** los leds.
- **/
-void led_periodicTask1ms(void);
+    tpm_chnl_pwm_signal_param_t pwm_chnl_config;
 
-/*==================[cplusplus]==============================================*/
-#ifdef __cplusplus
+    pwm_chnl_config.chnlNumber = kTPM_Chnl_4;
+    pwm_chnl_config.dutyCyclePercent = 0;
+    pwm_chnl_config.level = kTPM_HighTrue;
+
+    TPM_Init(TPM0, &TPM_0_config);
+
+    sourceClock = CLOCK_GetFreq(kCLOCK_Osc0ErClk);
+
+    if(TPM_SetupPwm(TPM0, &pwm_chnl_config, 1, kTPM_EdgeAlignedPwm, PWM_FREQ, sourceClock) == kStatus_Fail){
+        printf("Error pwm config");
+        while(1);
+    }
+
+    TPM_StartTimer(TPM0, kTPM_SystemClock);
+
 }
-#endif
+
+void pwm_updateDutycycle(uint8_t dutyCyclePercent){
+    TPM_UpdatePwmDutycycle(TPM0, kTPM_Chnl_4, kTPM_EdgeAlignedPwm, dutyCyclePercent);
+}
+
+void pwm_rtos_init()
+{
+
+}
 
 /*==================[end of file]============================================*/
-#endif /* LED_RTOS_H_ */

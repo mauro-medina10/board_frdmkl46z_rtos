@@ -35,8 +35,7 @@
 #define KEY_H_
 
 /*==================[inclusions]=============================================*/
-#include <board_dsi.h>
-#include "FreeRTOS.h"
+#include "board_dsi.h"
 
 /*==================[cplusplus]==============================================*/
 #ifdef __cplusplus

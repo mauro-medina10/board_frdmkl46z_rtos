@@ -34,17 +34,8 @@
 
 /*==================[inclusions]=============================================*/
 #include <board_dsi.h>
-#include <led_rtos.h>
-#include <uart_rtos.h>
-#include <mma8451_rtos.h>
-
-#include "fsl_port.h"
-#include "fsl_gpio.h"
-#include "fsl_clock.h"
-#include "pin_mux.h"
-#include "board.h"
-#include "i2c.h"
-#include "fsl_debug_console.h"
+#include "key.h"
+#include "led_rtos.h"
 
 /*==================[macros and definitions]=================================*/
 
@@ -129,6 +120,11 @@ void board_init(void)
 		PORT_SetPinConfig(board_gpioSw[i].port, board_gpioSw[i].pin, &port_sw_config);
 		GPIO_PinInit(board_gpioSw[i].gpio, board_gpioSw[i].pin, &gpio_sw_config);
 	}
+
+	/* pwm PIN config */
+    CLOCK_EnableClock(kCLOCK_Tpm0);
+	PORT_SetPinMux(PORTE, 31, kPORT_MuxAlt3);
+
 	/* ============ consola debug ===========
 	 * -----------------------------------------
 	 * Solo se recomienda usar cuando se esta en
@@ -141,9 +137,19 @@ void board_init(void)
 	{
 	    while(1);
 	}
+    /* =========== ADC =================== */
+    //PORT_SetPinMux(SENSOR_LUZ_PORT, SENSOR_LUZ_PIN, kPORT_PinDisabledOrAnalog);
+	PORT_SetPinMux(ADC_FILTRO_PORT,ADC_FILTRO_PIN, kPORT_PinDisabledOrAnalog);
 
-    /* =========== UART0 =================== */
-    uart_rtos_init();
+	adc_init(0, 2U);
+    /* =========== SW =================== */
+	key_init();
+
+	/* =========== PWM =================== */
+	pwm_init();
+
+	/* =========== UART0 =================== */
+	uart_rtos_init();
 
 	/* =========== I2C =================== */
 

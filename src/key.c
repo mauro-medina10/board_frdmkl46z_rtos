@@ -34,7 +34,6 @@
 
 /*==================[inclusions]=============================================*/
 #include "key.h"
-#include "FreeRTOS.h"
 #include "task.h"
 
 /*==================[macros and definitions]=================================*/
