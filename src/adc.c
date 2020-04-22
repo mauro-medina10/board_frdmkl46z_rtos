@@ -133,7 +133,7 @@ void adc_init(int32_t sampleTime, uint32_t channelNumber)
 {
     TimerHandle_t xTimer;
 
-    xADCQueue = xQueueCreate( 20, sizeof( int32_t ) );
+    xADCQueue = xQueueCreate( 40, sizeof( int32_t ) );
 
 
 #ifdef DEBUG
@@ -203,16 +203,13 @@ void ADC0_IRQHandler(void)
     /* Read conversion result to clear the conversion completed flag. */
     adcLect = ADC16_GetChannelConversionValue(ADC0, DEMO_ADC16_CHANNEL_GROUP);
 
-    /* promedio automático */
-    acumLectAdc += adcLect;
-    contLectAdc++;
-
     /* almacenamiento en queue */
     BaseType_t xHigherPriorityTaskWoken;
     xHigherPriorityTaskWoken = pdFALSE;
 
     /* coloco promedio en queue */
-    xQueueSendFromISR( xADCQueue, &adcLect, &xHigherPriorityTaskWoken );
+    //xQueueSendFromISR( xADCQueue, &adcLect, &xHigherPriorityTaskWoken );
+    xQueueSendToFrontFromISR( xADCQueue, &adcLect, &xHigherPriorityTaskWoken );
 
     portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }

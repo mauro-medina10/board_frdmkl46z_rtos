@@ -157,6 +157,10 @@ void board_init(void)
 
 	/* =========== MMA8451 ================ */
 	//mma8451_init();
+
+	/* ============= DAC ================ */
+	PORT_SetPinMux(DAC_FILTRO_PORT,DAC_FILTRO_PIN, kPORT_PinDisabledOrAnalog);
+	dac_init();
 }
 
 bool board_getSw(board_swId_enum id)

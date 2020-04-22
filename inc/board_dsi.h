@@ -53,6 +53,7 @@
 #include "i2c.h"
 #include "pwm.h"
 #include "adc.h"
+#include "dac.h"
 
 
 /*==================[cplusplus]==============================================*/
@@ -66,6 +67,9 @@ extern "C" {
 
 #define ADC_FILTRO_PORT             PORTE
 #define ADC_FILTRO_PIN              18
+
+#define DAC_FILTRO_PORT				PORTE
+#define DAC_FILTRO_PIN				30
 
 typedef enum
 {
