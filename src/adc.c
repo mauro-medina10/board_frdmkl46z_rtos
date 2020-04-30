@@ -91,7 +91,7 @@ void ADC_config(uint32_t channelNumber)
      */
 
     ADC16_GetDefaultConfig(&adc16_config);
-    adc16_config.enableHighSpeed = true;
+    adc16_config.enableHighSpeed = false;
     adc16_config.enableContinuousConversion = true;
 
     ADC16_Init(ADC0, &adc16_config);
@@ -133,7 +133,7 @@ void adc_init(int32_t sampleTime, uint32_t channelNumber)
 {
     TimerHandle_t xTimer;
 
-    xADCQueue = xQueueCreate( 40, sizeof( int32_t ) );
+    xADCQueue = xQueueCreate( 1, sizeof( int32_t ) );
 
 
 #ifdef DEBUG
@@ -209,7 +209,7 @@ void ADC0_IRQHandler(void)
 
     /* coloco promedio en queue */
     //xQueueSendFromISR( xADCQueue, &adcLect, &xHigherPriorityTaskWoken );
-    xQueueSendToFrontFromISR( xADCQueue, &adcLect, &xHigherPriorityTaskWoken );
+    xQueueOverwriteFromISR( xADCQueue, &adcLect, &xHigherPriorityTaskWoken );
 
     portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }

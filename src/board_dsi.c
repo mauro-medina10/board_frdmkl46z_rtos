@@ -121,10 +121,6 @@ void board_init(void)
 		GPIO_PinInit(board_gpioSw[i].gpio, board_gpioSw[i].pin, &gpio_sw_config);
 	}
 
-	/* pwm PIN config */
-    CLOCK_EnableClock(kCLOCK_Tpm0);
-	PORT_SetPinMux(PORTE, 31, kPORT_MuxAlt3);
-
 	/* ============ consola debug ===========
 	 * -----------------------------------------
 	 * Solo se recomienda usar cuando se esta en
@@ -146,8 +142,9 @@ void board_init(void)
 	key_init();
 
 	/* =========== PWM =================== */
+    CLOCK_EnableClock(kCLOCK_Tpm0);
+	PORT_SetPinMux(PORTE, 31, kPORT_MuxAlt3);
 	pwm_init();
-
 	/* =========== UART0 =================== */
 	uart_rtos_init();
 
@@ -159,8 +156,8 @@ void board_init(void)
 	//mma8451_init();
 
 	/* ============= DAC ================ */
-	PORT_SetPinMux(DAC_FILTRO_PORT,DAC_FILTRO_PIN, kPORT_PinDisabledOrAnalog);
-	dac_init();
+//	PORT_SetPinMux(DAC_FILTRO_PORT,DAC_FILTRO_PIN, kPORT_PinDisabledOrAnalog);
+//	dac_init();
 }
 
 bool board_getSw(board_swId_enum id)
